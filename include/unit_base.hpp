@@ -87,10 +87,11 @@ struct unit_divide<unit<Unit1Num, Unit1Denom>, unit<Unit2Num, Unit2Denom>>
 template<class Unit1, class Unit2>
 using unit_divide_t = typename unit_divide<Unit1, Unit2>::type;
 
-template<class Unit1, class Unit2>
+template<class Unit1, class Unit2, class = void>
 struct units_compatible : std::false_type {};
 
 template<class... Unit1Num, class... Unit1Denom, class... Unit2Num, class... Unit2Denom>
-struct units_compatible<unit<typelist<Unit1Num...>, typelist<Unit1Denom...>>, unit<typelist<Unit2Num...>, typelist<Unit2Denom...>>>
+struct units_compatible<unit<typelist<Unit1Num...>, typelist<Unit1Denom...>>, unit<typelist<Unit2Num...>, typelist<Unit2Denom...>>,
+	typename std::enable_if<sizeof...(Unit1Num) == sizeof...(Unit2Num) && sizeof...(Unit1Denom) == sizeof...(Unit2Denom)>::type>
 	: std::integral_constant<bool, all_true<unit_equiv_ignore_prefix<Unit1Num, Unit2Num>::value..., 
 			unit_equiv_ignore_prefix<Unit1Denom, Unit2Denom>::value...>::value> {};
