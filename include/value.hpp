@@ -12,7 +12,11 @@ template<class Rep, class Unit>
 class value;
 
 template<class To, class Rep, class Unit, class = typename std::enable_if<units_compatible<typename To::unit, Unit>::value>::type>
-To unit_cast(value<Rep, Unit> val);
+constexpr To unit_cast(value<Rep, Unit> val)
+{
+	using ratio = typename unit_divide<Unit, typename To::unit>::remainingRatio;
+	return To{ static_cast<typename To::value_type>(val.count() * ratio::num / ratio::denom) };
+}
 
 template <class Rep = long long, class Unit = unit<>>
 class value {
@@ -39,23 +43,67 @@ public:
 	constexpr value(const std::chrono::duration<Rep2, Period>& duration) :
 		value(value<Rep2, unit_scale_t<second_unit, Period>>{duration.count()}) {}
 
-	Rep count()
+	constexpr Rep count() const
 	{
 		return val;
 	}
 
 	template<class Rep2, class Unit2>
-	value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>> operator*(value<Rep2, Unit2> rhs)
+	constexpr value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>> operator*(value<Rep2, Unit2> rhs) const
 	{
 		return value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>>{count() * rhs.count()};
 	}
 
+	template<class Rhs, typename = typename std::enable_if<std::is_arithmetic<Rhs>::value>::type>
+	constexpr value<typename std::common_type<Rep, Rhs>::type, unit> operator*(const Rhs& rhs) const
+	{
+		return value<typename std::common_type<Rep, Rhs>::type, unit>{count() * rhs};
+	}
+
+	template<class Rhs, typename = typename std::enable_if<std::is_arithmetic<Rhs>::value>::type>
+	value operator*=(const Rhs& rhs)
+	{
+		return val *= rhs, *this;
+	}
+
 	template<class Rep2, class Unit2>
-	value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>> operator/(value<Rep2, Unit2> rhs)
+	constexpr value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>> operator/(value<Rep2, Unit2> rhs) const
 	{
 		return value<typename std::common_type<Rep, Rep2>::type, unit_multiply_t<Unit, Unit2>>{count() / rhs.count()};
 	}
+
+	template<class Rep2, class Unit2, class = typename std::enable_if<units_compatible<Unit, Unit2>::value>::type>
+	constexpr value<typename std::common_type<Rep, Rep2>::type, Unit> operator+(value<Rep2, Unit2> rhs) const
+	{
+		return value<typename std::common_type<Rep, Rep2>::type, Unit>
+				{count() + unit_cast<value<typename std::common_type<Rep, Rep2>::type, Unit>>(rhs).count()};
+	}
+
+	template<class Rep2, class Unit2, class = typename std::enable_if<units_compatible<Unit, Unit2>::value>::type>
+	value& operator+=(value<Rep2, Unit2> rhs)
+	{
+		return val += value{ rhs }.count(), *this;
+	}
+
+	template<class Rep2, class Unit2, class = typename std::enable_if<units_compatible<Unit, Unit2>::value>::type>
+	value& operator-=(value<Rep2, Unit2> rhs)
+	{
+		return val -= value{ rhs }.count(), *this;
+	}
+
+	template<class Rep2, class Unit2, class = typename std::enable_if<units_compatible<Unit, Unit2>::value>::type>
+	constexpr value<typename std::common_type<Rep, Rep2>::type, Unit> operator-(value<Rep2, Unit2> rhs) const
+	{
+		return value<typename std::common_type<Rep, Rep2>::type, Unit>
+		{count() - unit_cast<value<typename std::common_type<Rep, Rep2>::type, Unit>>(rhs).count()};
+	}
 };
+
+template<class Rep, class Unit, class Lhs, typename = typename std::enable_if<std::is_arithmetic<Lhs>::value>::type>
+constexpr value<typename std::common_type<Rep, Lhs>::type, Unit> operator*(const Lhs& lhs, const value<Rep, Unit>& val)
+{
+	return value<typename std::common_type<Rep, Lhs>::type, Unit>{val.count() * lhs};
+}
 
 DEFINE_UNIT_UDLS(second, s)
 DEFINE_SCALED_UNIT(minute, min, second, std::ratio<60>)

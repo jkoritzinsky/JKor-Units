@@ -3,8 +3,8 @@
 #include <ratio>
 
 template<class Lhs, class Rhs>
-struct unit_less : std::integral_constant<bool, Lhs::name_hash < Rhs::name_hash &&
-									std::ratio_less<typename Lhs::prefix, typename Rhs::prefix>::value>
+struct unit_less : std::integral_constant<bool, Lhs::name_hash < Rhs::name_hash || (Lhs::name_hash == Rhs::name_hash &&
+									std::ratio_less<typename Lhs::prefix, typename Rhs::prefix>::value)>
 {};
 
 template<class Lhs, class Rhs>

@@ -167,6 +167,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>-Xclang -std=c++11 %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -270,10 +271,7 @@
   <ItemGroup>
     <ClInclude Include="include\HashedString.hpp" />
     <ClInclude Include="include\helpers.hpp" />
-    <ClInclude Include="include\insertion_sort.hpp" />
-    <ClInclude Include="include\quicksort.hpp" />
     <ClInclude Include="include\si_units.hpp" />
-    <ClInclude Include="include\sort.hpp" />
     <ClInclude Include="include\typelist.hpp" />
     <ClInclude Include="include\unit_macros.hpp" />
     <ClInclude Include="include\unit_base.hpp" />
@@ -283,6 +281,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\main.cpp" />
+    <ClCompile Include="test\units_compatible.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
