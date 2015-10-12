@@ -3,6 +3,7 @@
 template<class Prefix> \
 struct name ## _component{ \
 	using prefix = Prefix; \
+	constexpr static const char* component_name = #name; \
 	constexpr static unsigned long long name_hash = hashString(#name); \
 }; \
 using name ## _unit = unit<typelist<name ## _component<std::ratio<1>>>>;

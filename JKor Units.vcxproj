@@ -167,7 +167,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>-Xclang -std=c++11 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>-Xclang -std=c++1z %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -276,6 +276,7 @@
     <ClInclude Include="include\unit_macros.hpp" />
     <ClInclude Include="include\unit_base.hpp" />
     <ClInclude Include="include\unit_macros_base.hpp" />
+    <ClInclude Include="include\unit_to_string.hpp" />
     <ClInclude Include="include\value.hpp" />
     <ClInclude Include="include\unit_compare.hpp" />
   </ItemGroup>
