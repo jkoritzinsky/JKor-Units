@@ -5,14 +5,16 @@
 #include <string>
 
 template<class Ratio>
-struct ratio_to_prefix;
+struct ratio_to_prefix
+{
+    static const char* value;
+};
 
 #define RatioToPrefix(RatioType, string) \
-template<> struct ratio_to_prefix<RatioType> \
-{ \
-    const char* str = string;\
-}
+template<> \
+const char * ratio_to_prefix<RatioType>::value = string
 
+RatioToPrefix(std::ratio<1>, "");
 RatioToPrefix(std::atto, "a");
 RatioToPrefix(std::femto, "f");
 RatioToPrefix(std::pico, "p");
@@ -83,18 +85,56 @@ template<class List>
 struct list_to_string;
 
 template<class... Groups>
-struct concatenate_groups
+struct concatenate_groups_impl
 {
     static const std::string value;
 };
 
-//TODO: Write a pre-C++17 compatible version of this fold expression.
+#ifdef __cpp_fold_expressions
 template<class... Groups>
-const std::string concatenate_groups<Groups...>::value = ("" + ... + (component_to_string<typename Groups::type>::value + "^" + std::to_string(Groups::value)));
+const std::string concatenate_groups_impl<Groups...>::value = ("" + ... + (component_to_string<typename Groups::type>::value  (Groups::value != 1 ? + "^" + std::to_string(Groups::value) : "")));
+#else
+template<>
+const std::string concatenate_groups_impl<>::value = "";
+
+template<class First, class... Rest>
+struct concatenate_groups_impl<First, Rest...>
+{
+    static const std::string value;
+};
+
+template<class First, class... Rest>
+const std::string concatenate_groups_impl<First, Rest...>::value = component_to_string<typename First::type>::value + (First::value != 1 ? "^" + std::to_string(First::value)  : "")
+                                                                    + concatenate_groups_impl<Rest...>::value;
+#endif
+template<class List>
+struct concatenate_groups;
+
+template<class... Elements>
+struct concatenate_groups<typelist<Elements...>>
+{
+    static const std::string value;
+};
+
+template<class... Elements>
+const std::string concatenate_groups<typelist<Elements...>>::value = concatenate_groups_impl<Elements...>::value;
 
 template<class... Elements>
 struct list_to_string<typelist<Elements...>>
 {
     using groups = group_elements_t<Elements...>;
-    //static const std::string value = concatenate_groups<groups>::value;
+    static const std::string value;
 };
+
+template<class... Elements>
+const std::string list_to_string<typelist<Elements... >>::value = concatenate_groups<groups>::value;
+
+template<class Unit>
+struct unit_to_string
+{
+    static const std::string value;
+};
+
+template<class Unit>
+const std::string unit_to_string<Unit>::value = list_to_string<typename Unit::numerator>::value
+                                        + (Unit::denominator::count != 0 ? "/" + list_to_string<typename Unit::denominator>::value : "");

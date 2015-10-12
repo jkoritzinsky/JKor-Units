@@ -23,6 +23,7 @@ int main()
     std::cout << typeid(complex_cancel).name() << "\n\n";
     std::cout << typeid(remainingTest::remainingRatio).name() << "\n\n";
     std::cout << typeid(group_test).name() << "\n\n";
+    std::cout << unit_to_string<meter_unit>::value << "\n\n";
     std::cout << basic_compatible::value;
     std::cout << complex_compatible::value;
     std::cout << incompatible::value;

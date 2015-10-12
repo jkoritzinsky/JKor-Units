@@ -18,4 +18,5 @@ struct typelist
     public:
     template<class List>
     using concat_t = typename concat<List>::type;
+    static constexpr size_t count = sizeof...(Elements);
 };
