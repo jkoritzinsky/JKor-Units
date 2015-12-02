@@ -69,7 +69,7 @@ struct group_elements_impl<CurrentKey>
 {
     constexpr static int count = 1;
     constexpr static bool sameKey = false;
-    using type = typelist<>;
+    using type = jkor::units::details::typelist<>;
 };
 
 template<class... Elements>
@@ -111,23 +111,23 @@ template<class List>
 struct concatenate_groups;
 
 template<class... Elements>
-struct concatenate_groups<typelist<Elements...>>
+struct concatenate_groups<jkor::units::details::typelist<Elements...>>
 {
     static const std::string value;
 };
 
 template<class... Elements>
-const std::string concatenate_groups<typelist<Elements...>>::value = concatenate_groups_impl<Elements...>::value;
+const std::string concatenate_groups<jkor::units::details::typelist<Elements...>>::value = concatenate_groups_impl<Elements...>::value;
 
 template<class... Elements>
-struct list_to_string<typelist<Elements...>>
+struct list_to_string<jkor::units::details::typelist<Elements...>>
 {
     using groups = group_elements_t<Elements...>;
     static const std::string value;
 };
 
 template<class... Elements>
-const std::string list_to_string<typelist<Elements... >>::value = concatenate_groups<groups>::value;
+const std::string list_to_string<jkor::units::details::typelist<Elements... >>::value = concatenate_groups<groups>::value;
 
 template<class Unit>
 struct unit_to_string

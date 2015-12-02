@@ -45,12 +45,24 @@
     <ClInclude Include="include\unit_to_string.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\us_units.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test\detection_idiom_backport.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="test\catch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="test\units_compatible.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="test\value.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

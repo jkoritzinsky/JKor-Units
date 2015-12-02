@@ -271,6 +271,7 @@
   <ItemGroup>
     <ClInclude Include="include\HashedString.hpp" />
     <ClInclude Include="include\helpers.hpp" />
+    <ClInclude Include="include\us_units.hpp" />
     <ClInclude Include="include\si_units.hpp" />
     <ClInclude Include="include\typelist.hpp" />
     <ClInclude Include="include\unit_macros.hpp" />
@@ -279,10 +280,13 @@
     <ClInclude Include="include\unit_to_string.hpp" />
     <ClInclude Include="include\value.hpp" />
     <ClInclude Include="include\unit_compare.hpp" />
+    <ClInclude Include="test\catch.h" />
+    <ClInclude Include="test\detection_idiom_backport.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test\main.cpp" />
     <ClCompile Include="test\units_compatible.cpp" />
+    <ClCompile Include="test\value.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

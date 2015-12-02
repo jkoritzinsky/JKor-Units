@@ -2,6 +2,8 @@
 #include "../include/si_units.hpp"
 #include "../include/unit_to_string.hpp"
 
+using namespace jkor::units;
+
 using basic_multiply = unit_multiply<meter_unit, second_unit>::type;
 using basic_divide = unit_divide<unit<>, second_unit>::type;
 using basic_compatible = units_compatible<second_unit, second_unit>;
